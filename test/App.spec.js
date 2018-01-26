@@ -1,10 +1,17 @@
 import { shallow } from '@vue/test-utils'
 import App from '@/App.vue'
+import Editor from '@/components/Editor.vue'
 
 describe('<App>', () => {
-  test('renders', () => {
-    const wrapper = shallow(App)
+  describe('Component', () => {
+    test('has name', () => {
+      expect(App.name.length).toBeTruthy()
+    })
 
-    expect(wrapper.text()).toEqual(expect.stringContaining('Hello World'))
+    test('renders editor and markdown preview', () => {
+      const wrapper = shallow(App)
+
+      expect(wrapper.contains(Editor)).toBeTruthy()
+    })
   })
 })
