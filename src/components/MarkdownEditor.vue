@@ -76,7 +76,7 @@ export default {
   flex-direction: row;
 }
 
-.main, .editor, .preview {
+.main, .editor, .preview, .meta {
   flex: 1;
 }
 
