@@ -18,7 +18,7 @@ export default {
       const content = this.content.replace(/:([a-z+-][^:\s]+):/gi, (_, it) => 
       ` ![${it} emoji](https://raw.githubusercontent.com/WebpageFX/emoji-cheat-sheet.com/master/public/graphics/emojis/${it}.png)`)
 
-      return marked(content, { sanitize: true, gfm: true, emoji: true })
+      return marked(content, { sanitize: true, gfm: true })
     }
   }
 }
@@ -31,7 +31,7 @@ export default {
 </style>
 
 <style>
-img[alt$="emoji"] {
+img[alt$=emoji] {
   height: 1em;
   width: auto;
   display: inline-block;

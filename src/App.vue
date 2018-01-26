@@ -21,4 +21,8 @@ html, body {
  .app {
    height: 100%;
  }
+
+ img {
+   max-width: 100%;
+ }
 </style>

@@ -7,13 +7,37 @@ Vue.use(Vuex)
 const CREATE = 'CREATE'
 const UPDATE = 'UPDATE'
 
+function readFromLocalStorage(key, defaultValue) {
+  const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/
+
+  function reviver(key, value) {
+    if (typeof value === 'string' && dateFormat.test(value)) {
+      return new Date(value)
+    }
+
+    return value
+  }
+  
+  const value = localStorage.getItem(key)
+
+  if (!value) return defaultValue
+
+  try {
+    return JSON.parse(value, reviver)
+  } catch (e) {
+    localStorage.removeItem(key)
+  }
+
+  return defaultValue
+}
+
 const getters = {
   noteById: ({ notes }) => id => notes.find(it => it.id === id),
   notesSortedByLastUpdated: ({ notes }) => notes.slice().sort((a, b) => desc(a.updatedAt, b.updatedAt))
 }
 
 const state = () => ({
-  notes: []
+  notes: readFromLocalStorage('notebook', [])
 })
 
 const mutations = {
@@ -67,6 +91,12 @@ const store = new Store({
   state,
   mutations,
   actions
+})
+
+store.subscribe((mutation, state) => {
+  if (mutation.type === CREATE || mutation.type === UPDATE) {
+    localStorage.setItem('notebook', JSON.stringify(state.notes))
+  }
 })
 
 export default store
