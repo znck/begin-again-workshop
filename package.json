@@ -4,10 +4,16 @@
   "description": "Content for Begin Again Workshop",
   "private": true,
   "main": "src/index.js",
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "vue": "^2.5.13"
+  },
+  "devDependencies": {
+    "@vue/cli": "^3.0.0-alpha.5",
+    "@vue/cli-service-global": "^3.0.0-alpha.5"
+  },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "dev": "vue serve src/index.js"
   },
   "repository": {
     "type": "git",
