@@ -29,6 +29,18 @@ describe('<Preview>', () => {
       expect(wrapper.element.querySelector('#foo')).toBeFalsy()
       expect(wrapper.element.textContent).toEqual(expect.stringContaining('<div id="foo">Hello</div>'))
     })
+
+    test('renders emoji', () => {
+      const wrapper = shallow(Markdown, {
+        propsData: { content: 'Test :tada: imoji' }
+      })
+
+      wrapper.update()
+
+      expect(wrapper.element.querySelector('img')).toBeTruthy()
+      expect(wrapper.element.querySelector('img').getAttribute('alt')).toEqual('tada emoji')
+      expect(wrapper.element.querySelector('img').getAttribute('src')).toEqual(expect.stringContaining('tada'))
+    })
   })
   describe('API', () => {
     const wrapper = shallow(Markdown, { propsData: { content: '' } })
