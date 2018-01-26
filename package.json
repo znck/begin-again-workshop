@@ -1,0 +1,26 @@
+{
+  "name": "begin-again-workshop",
+  "version": "0.0.0",
+  "description": "Content for Begin Again Workshop",
+  "private": true,
+  "main": "src/index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/znck/begin-again-workshop.git"
+  },
+  "keywords": [
+    "vue",
+    "workshop"
+  ],
+  "author": "Rahul Kadyan <hi@znck.me> (https://znck.me)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/znck/begin-again-workshop/issues"
+  },
+  "homepage": "https://github.com/znck/begin-again-workshop#readme"
+}
