@@ -9,7 +9,12 @@
   },
   "devDependencies": {
     "@vue/cli": "^3.0.0-alpha.5",
-    "@vue/cli-service-global": "^3.0.0-alpha.5"
+    "@vue/cli-service-global": "^3.0.0-alpha.5",
+    "@vue/test-utils": "^1.0.0-beta.10",
+    "babel-jest": "^22.1.0",
+    "babel-preset-env": "^1.6.1",
+    "jest": "^22.1.4",
+    "vue-jest": "^1.4.0"
   },
   "scripts": {
     "test": "jest",
@@ -28,5 +33,20 @@
   "bugs": {
     "url": "https://github.com/znck/begin-again-workshop/issues"
   },
-  "homepage": "https://github.com/znck/begin-again-workshop#readme"
+  "homepage": "https://github.com/znck/begin-again-workshop#readme",
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "vue"
+    ],
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
+      ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest"
+    },
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "mapCoverage": true
+  }
 }
