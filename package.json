@@ -15,7 +15,9 @@
     "babel-jest": "^22.1.0",
     "babel-preset-env": "^1.6.1",
     "jest": "^22.1.4",
-    "vue-jest": "^1.4.0"
+    "jest-serializer-vue": "^0.3.0",
+    "vue-jest": "^1.4.0",
+    "vue-server-renderer": "^2.5.13"
   },
   "scripts": {
     "test": "jest",
@@ -45,6 +47,9 @@
       "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
       ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest"
     },
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/jest-serializer-vue"
+    ],
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1"
     },
