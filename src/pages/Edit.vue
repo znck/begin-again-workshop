@@ -30,8 +30,6 @@ export default {
         this.$router.push({ name: 'home' })
         return
       }
-
-      console.log(value)
       
       this.title = value.title
       this.body = value.body
