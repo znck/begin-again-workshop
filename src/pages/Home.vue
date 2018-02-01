@@ -3,6 +3,7 @@
     <header class="header">
       <h1>Markdown Notebook</h1>
       <router-link tag="button" class="button" :to="{ name: 'create' }">Add New Note</router-link>
+      <button class="button logout" @click.prevent="logout">Logout</button>
     </header>
     <main class="notes">
       <Note v-for="note in notes" 
@@ -19,6 +20,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import Note from '../components/Note.vue'
+import { auth } from '../firebase'
 
 
 export default {
@@ -28,7 +30,15 @@ export default {
     ...mapGetters({ notes: 'notesSortedByLastUpdated' })
   },
 
-  components: { Note }
+  components: { Note },
+
+  methods: {
+    async logout () {
+      await auth.signOut()
+      
+      this.$router.replace({ name: 'login' })
+    }
+  }
 }
 </script>
 
@@ -53,6 +63,10 @@ export default {
   border-radius: 4px;
   border: none;
   cursor: pointer;
+}
+
+.logout {
+  background: #aaa;
 }
 
 .notes {

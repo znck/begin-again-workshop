@@ -8,19 +8,22 @@
       <router-link :to="{ name: 'edit', params: { id } }">
         <EditIcon />
       </router-link>
+      <a href="#" @click.prevent="removeNote">
+        <DeleteIcon />
+      </a>
     </header>
     <article class="main">
       <Markdown class="preview" :content="note.body" />
     </article>
     <footer class="footer">
-      <small>Created: {{ note.createdAt.toDateString() }} {{ note.createdAt.toTimeString() }}</small>
-      <small style="text-align: right">Last Updated: {{ note.createdAt.toDateString() }} {{ note.createdAt.toTimeString() }}</small>
+      <small>Created: {{ note.createdAt | formatDate }}</small>
+      <small style="text-align: right">Last Updated: {{ note.createdAt | formatDate }}</small>
     </footer>
   </section>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import Markdown from '../components/Markdown.vue'
 import * as Icons from '../components/Icon'
 
@@ -50,8 +53,32 @@ export default {
   components: {
     Markdown, 
     BackIcon: Icons.Back,
-    EditIcon: Icons.Edit
+    EditIcon: Icons.Edit,
+    DeleteIcon: Icons.Trash
   },
+
+  filters: {
+    formatDate (date) {
+      if (!date) return ''
+
+      if (typeof date === 'number') date = new Date(date)
+
+      return date.toDateString() + ' ' + date.toTimeString()
+    }
+  },
+
+  methods: {
+    ...mapActions(['remove']),
+    async removeNote() {
+      const confirm = window.confirm('Do you want to delete this note?')
+
+      if (!confirm) return
+
+      await this.remove(this.note)
+
+      this.$router.push({ path: '/' })
+    }
+  }
 }
 </script>
 
