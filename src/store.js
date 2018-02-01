@@ -1,35 +1,13 @@
 import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
-import { desc, uuid } from './utils'
+import { firebaseMutations, firebaseAction } from 'vuexfire'
+
+import { db } from './firebase'
+import { uuid, desc } from './utils'
 
 Vue.use(Vuex)
 
-const CREATE = 'CREATE'
-const UPDATE = 'UPDATE'
-
-function readFromLocalStorage(key, defaultValue) {
-  const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/
-
-  function reviver(key, value) {
-    if (typeof value === 'string' && dateFormat.test(value)) {
-      return new Date(value)
-    }
-
-    return value
-  }
-  
-  const value = localStorage.getItem(key)
-
-  if (!value) return defaultValue
-
-  try {
-    return JSON.parse(value, reviver)
-  } catch (e) {
-    localStorage.removeItem(key)
-  }
-
-  return defaultValue
-}
+const notesRef = db.ref('notes')
 
 const getters = {
   noteById: ({ notes }) => id => notes.find(it => it.id === id),
@@ -37,24 +15,20 @@ const getters = {
 }
 
 const state = () => ({
-  notes: readFromLocalStorage('notebook', [])
+  notes: []
 })
 
-const mutations = {
-  [CREATE]: (state, note) => { state.notes.push(note) },
-  [UPDATE]: (state, [old, note]) => { state.notes.splice(state.notes.indexOf(old), 1, note) }
-}
-
 const actions = {
-  async save({ dispatch }, payload) {
-    if (payload.id) return dispatch('update', payload)
+  init: firebaseAction(({ bindFirebaseRef }) => bindFirebaseRef('notes', notesRef)),
     
-    return dispatch('create', payload)
+  async save({ dispatch }, payload) {
+    return await dispatch(payload.id ? 'update' : 'create', payload)
   },
 
-  async create({ commit }, { title, body }) {
-    const timestamp = new Date()
-    const note = {
+  async create(_, { title, body }) {
+    const newNoteRef = notesRef.push()
+    const timestamp = Date.now()
+    const payload = {
       id: uuid(),
       title,
       body,
@@ -62,41 +36,35 @@ const actions = {
       updatedAt: timestamp
     }
 
-    commit(CREATE, note)
+    await newNoteRef.set(payload)
+
+    return payload
+  },
+  
+  async update(_, item) {
+    const note = getters.noteById(item.id)
+
+    await notesRef.child(note['.key']).update({
+      updatedAt: Date.now(),
+      ...item
+    })
 
     return note
   },
-  
-  async update({ commit, getters }, { id, title, body }) {
-    const note = getters.noteById(id)
 
-    if (!note) throw Error('Cannot update non-existing note.')
-
-    const payload = {
-      ...note,
-      id,
-      title,
-      body,
-      updatedAt: new Date()
-    }
-
-    commit(UPDATE, [note, payload])
-
-    return payload
+  async remove(_, item) {
+    await notesRef.child(item['.key']).remove()
   }
 }
 
-const store = new Store({
+const mutations = {
+  ...firebaseMutations
+}
+
+export default new Store({
   getters,
   state,
   mutations,
   actions
 })
 
-store.subscribe((mutation, state) => {
-  if (mutation.type === CREATE || mutation.type === UPDATE) {
-    localStorage.setItem('notebook', JSON.stringify(state.notes))
-  }
-})
-
-export default store

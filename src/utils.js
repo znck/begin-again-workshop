@@ -21,3 +21,27 @@ export function asc(a, b) {
 export function desc(a, b) {
   return - asc(a, b)
 }
+
+export function readFromLocalStorage(key, defaultValue) {
+  const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/
+
+  function reviver(key, value) {
+    if (typeof value === 'string' && dateFormat.test(value)) {
+      return new Date(value)
+    }
+
+    return value
+  }
+  
+  const value = localStorage.getItem(key)
+
+  if (!value) return defaultValue
+
+  try {
+    return JSON.parse(value, reviver)
+  } catch (e) {
+    localStorage.removeItem(key)
+  }
+
+  return defaultValue
+}

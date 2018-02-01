@@ -6,7 +6,11 @@
 
 <script>
 export default {
-  name: 'MarkdownNotebook'
+  name: 'MarkdownNotebook',
+
+  created () {
+    this.$store.dispatch('init')
+  }
 }
 </script>
 
